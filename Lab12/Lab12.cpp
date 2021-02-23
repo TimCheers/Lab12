@@ -127,27 +127,75 @@ void Print(vector<STR> human, int n)
         cout << human[i].No << endl << endl;
     }
 }
+void SaveInF(vector<STR> human, int n)
+{
+    string NameF;
+    cout << "Введите название файла для сохранения:";
+    cin >> NameF;
+    NameF += ".txt";
+    ofstream F(NameF);
+    for (int i = 0; i < n; i++)
+    {
+        F << human[i].n << endl;
+        F << human[i].NAME << endl;
+        F << human[i].dat1 << ' ' << human[i].dat2 << ' ' << human[i].dat3 << endl;
+        F << human[i].No << endl;
+    }
+    F.close();
+}
+void GetFromF(vector<STR> &human, int &n)
+{
+    string NameF1;
+    ifstream F1(NameF1);
+    bool f = 0;
+    while (f==0)
+    {
+        cout << "Введите название файла для чтения:";
+        cin >> NameF1;
+        NameF1 += ".txt";
+        ifstream F1(NameF1);
+        if (!F1.is_open())
+        {
+            cout << "Ошибка чтения файла" << endl;
+        }
+        else
+        {
+            f = 1;
+        }
+    }
+    int i = 0;
+    while (!F1.eof())
+    {
+        F1 >> human[i].n;
+        F1 >> human[i].NAME;
+        F1 >> human[i].dat1;
+        F1 >> human[i].dat2;
+        F1 >> human[i].dat3;
+        F1 >> human[i].No;
+        i++;
+    }
+    n = i + 1;
+}
 int main()
 {
     system("chcp 1251>nul");
     setlocale(LC_ALL, "ru");
 	srand(time(NULL));
     vector<STR> human;
-    /*int n=0;
+    int n=0;
     cout << "Введите количество элементов(не менее 100): ";
-    while (n < 100)
-    {
-        cin >> n;
-        if (n < 100)
-        {
-            cout << "Введено некоректное значение. Введите значение заново";
-        }
-    }
-    Fill(human,n);
-    Print(human,n);*/
-
-
-
+    //while (n < 100)
+    //{
+    //    cin >> n;
+    //    if (n < 100)
+    //    {
+    //        cout << "Введено некоректное значение. Введите значение заново";
+    //    }
+    //}
+    //Fill(human,n);
+    //SaveInF(human, n);
+    GetFromF(human, n);
+    Print(human, n);
     return 0;
 }
 
