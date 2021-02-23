@@ -18,7 +18,7 @@ int random(int a, int b)
     if (a > 0) return a + rand() % (b - a);
     else return a + rand() % (abs(a) + b);
 }
-void Fill(vector<STR> &human, int n)
+void Fill(vector<STR> &human, int n1)
 {
     ifstream nameM1("NameM.txt");
     ifstream nameW1("NameW.txt");
@@ -75,7 +75,7 @@ void Fill(vector<STR> &human, int n)
     patronymicM1.close();
     patronymicW1.close();
     int r;
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < n1; i++)
     {
         r = random(0,20);
         if (r<=10)
@@ -117,9 +117,9 @@ void Fill(vector<STR> &human, int n)
     delete surnameM;
     delete surnameW;*/
 }
-void Print(vector<STR> human, int n)
+void Print(vector<STR> human, int n1)
 {
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < n1; i++)
     {
         cout << human[i].n << ')'<<'\t';
         cout << human[i].NAME << endl<<'\t';
@@ -127,14 +127,14 @@ void Print(vector<STR> human, int n)
         cout << human[i].No << endl << endl;
     }
 }
-void SaveInF(vector<STR> human, int n)
+void SaveInF(vector<STR> human, int n1)
 {
     string NameF;
     cout << "Введите название файла для сохранения:";
     cin >> NameF;
     NameF += ".txt";
     ofstream F(NameF);
-    for (int i = 0; i < n; i++)
+    for (int i = 0; i < n1; i++)
     {
         F << human[i].n << endl;
         F << human[i].NAME << endl;
@@ -143,10 +143,10 @@ void SaveInF(vector<STR> human, int n)
     }
     F.close();
 }
-void GetFromF(vector<STR> &human, int &n)
+void GetFromF(vector<STR> &human, int &n1)
 {
+    human.clear();
     string NameF1;
-    ifstream F1(NameF1);
     bool f = 0;
     while (f==0)
     {
@@ -161,20 +161,41 @@ void GetFromF(vector<STR> &human, int &n)
         else
         {
             f = 1;
+            int i = 0;
+            n1 = -1;
+            string NAME0,NAME1;
+            int dat01;
+            int dat02;
+            int dat03;
+            string No0;
+            int n0;
+            while (!F1.eof())
+            {
+                STR test;
+                F1 >> n0;
+                F1 >> NAME1;
+                getline(F1, NAME0);
+                F1 >> dat01;
+                F1 >> dat02;
+                F1 >> dat03;
+                F1 >> No0;
+                test.NAME = NAME1 + ' ' + NAME0;
+                test.dat1 = dat01;
+                test.dat2 = dat02;
+                test.dat3 = dat03;
+                test.n = n0;
+                test.No = No0;
+                human.push_back(test);
+                i++;
+                n1++;
+            }
         }
     }
-    int i = 0;
-    while (!F1.eof())
-    {
-        F1 >> human[i].n;
-        F1 >> human[i].NAME;
-        F1 >> human[i].dat1;
-        F1 >> human[i].dat2;
-        F1 >> human[i].dat3;
-        F1 >> human[i].No;
-        i++;
-    }
-    n = i + 1;
+}
+void DelByNumb(vector<STR>& human, int k)
+{
+    auto iter = human.cbegin();
+    human.erase(iter + k-1);
 }
 int main()
 {
@@ -182,20 +203,47 @@ int main()
     setlocale(LC_ALL, "ru");
 	srand(time(NULL));
     vector<STR> human;
-    int n=0;
-    cout << "Введите количество элементов(не менее 100): ";
-    //while (n < 100)
-    //{
-    //    cin >> n;
-    //    if (n < 100)
-    //    {
-    //        cout << "Введено некоректное значение. Введите значение заново";
-    //    }
-    //}
-    //Fill(human,n);
-    //SaveInF(human, n);
-    GetFromF(human, n);
-    Print(human, n);
+    int n1=0;
+    cout << "Введите команду" << endl << "Список доступных команд: стоп, заполнить случайно, вывести, загрузить из файла, сохранить в файле." << endl;
+    string str = "слово";
+    while (str!="стоп")
+    {
+        getline(cin, str);
+        cout << endl;
+        if (str=="заполнить случайно")
+        {
+            cout << "Введите количество элементов(не менее 100): ";
+            while (n1 < 100)
+            {
+                cin >> n1;
+                if (n1 < 100)
+                {
+                    cout << "Введено некоректное значение. Введите значение заново";
+                }
+            }
+            Fill(human, n1);
+        }
+        if (str=="вывести")
+        {
+            Print(human, n1);
+        }
+        if (str=="загрузить из файла")
+        {
+            GetFromF(human, n1);
+        }
+        if (str=="сохранить в файле")
+        {
+            SaveInF(human, n1);
+        }
+        //if (str != "сохранить в файле" || str != "загрузить из файла" || str != "вывести" || str != "заполнить случайно" || str != "стоп")
+        //{
+        //    cout << "Неизвестная команда! Введите команду заново!" << endl << endl;
+        //}
+        //else
+        //{
+        //    cout << "Введите слудущую команду" << endl;
+        //}
+    }
     return 0;
 }
 
