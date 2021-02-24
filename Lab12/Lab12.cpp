@@ -20,6 +20,7 @@ int random(int a, int b)
 }
 void Fill(vector<STR> &human, int n1)
 {
+    human.clear();
     ifstream nameM1("NameM.txt");
     ifstream nameW1("NameW.txt");
     ifstream surnameM1("surnameM.txt");
@@ -110,12 +111,7 @@ void Fill(vector<STR> &human, int n1)
             human.push_back(test);
         }
     }
-    /*delete nameM;
-    delete nameW;
-    delete patronymicM;
-    delete patronymicW;
-    delete surnameM;
-    delete surnameW;*/
+    cout << "Заполнение прошло успешно!" << endl;
 }
 void Print(vector<STR> human, int n1)
 {
@@ -142,6 +138,7 @@ void SaveInF(vector<STR> human, int n1)
         F << human[i].No << endl;
     }
     F.close();
+    cout << "Сохранение прошло успешно!" << endl;
 }
 void GetFromF(vector<STR> &human, int &n1)
 {
@@ -189,6 +186,39 @@ void GetFromF(vector<STR> &human, int &n1)
                 i++;
                 n1++;
             }
+            cout << "Чтение прошло успешно!" << endl;
+        }
+    }
+}
+void substringSearch(string str, string substr)
+{
+    int strl, substrl, res = -1;
+    str = str.size();
+    substrl - substr.size();
+    if (strl != 0 && substrl != 0)
+    {
+        for (int i = 0; i < strl - substrl + 1; i++)
+        {
+            for (int j = 0; j < substrl; j++)
+            {
+                if (substr[j] != str[i + 1])
+                {
+                    break;
+                }
+                else if (j == substrl - 1)
+                {
+                    res = i;
+                    break;
+                }
+            }
+        }
+        if (res != -1)
+        {
+            cout << "Подстрока найдена. подстрока начинается с " << res;
+        }
+        else
+        {
+            cout << "Подстроки нет в строке!" << endl;
         }
     }
 }
@@ -235,14 +265,6 @@ int main()
         {
             SaveInF(human, n1);
         }
-        //if (str != "сохранить в файле" || str != "загрузить из файла" || str != "вывести" || str != "заполнить случайно" || str != "стоп")
-        //{
-        //    cout << "Неизвестная команда! Введите команду заново!" << endl << endl;
-        //}
-        //else
-        //{
-        //    cout << "Введите слудущую команду" << endl;
-        //}
     }
     return 0;
 }
