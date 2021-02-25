@@ -190,12 +190,12 @@ void GetFromF(vector<STR> &human, int &n1)
         }
     }
 }
-void substringSearch(string str, string substr)
+void substringSearch(string str, string substr, bool f)
 {
     int strl, substrl, res = -1;
-    str = str.size();
-    substrl - substr.size();
-    if (strl != 0 && substrl != 0)
+    strl = str.size();
+    substrl = substr.size();
+    if (substrl != 0 && strl != 0)
     {
         for (int i = 0; i < strl - substrl + 1; i++)
         {
@@ -214,11 +214,13 @@ void substringSearch(string str, string substr)
         }
         if (res != -1)
         {
-            cout << "Подстрока найдена. подстрока начинается с " << res;
+            cout << "Подстрока найдена.";
+            f = 1;
         }
         else
         {
-            cout << "Подстроки нет в строке!" << endl;
+            cout << "Подстрока найдена." << endl;
+            f = 0;
         }
     }
 }
@@ -234,7 +236,7 @@ int main()
 	srand(time(NULL));
     vector<STR> human;
     int n1=0;
-    cout << "Введите команду" << endl << "Список доступных команд: стоп, заполнить случайно, вывести, загрузить из файла, сохранить в файле." << endl;
+    cout << "Введите команду" << endl << "Список доступных команд: стоп, заполнить случайно, вывести, загрузить из файла, сохранить в файле, найти ФИО." << endl;
     string str = "слово";
     while (str!="стоп")
     {
@@ -255,7 +257,14 @@ int main()
         }
         if (str=="вывести")
         {
-            Print(human, n1);
+            if (n1==0)
+            {
+                cout << "Вывод на экран невозможен." << endl<<endl;
+            }
+            else
+            {
+                Print(human, n1);
+            }
         }
         if (str=="загрузить из файла")
         {
@@ -263,7 +272,34 @@ int main()
         }
         if (str=="сохранить в файле")
         {
-            SaveInF(human, n1);
+            if (n1 == 0)
+            {
+                cout << "Сохранение невозможно." << endl << endl;
+            }
+            else
+            {
+                SaveInF(human, n1);
+            }
+        }
+        if (str == "найти ФИО")
+        {
+            string P;
+            bool f = 0;
+            cout << "Введите параметр поиска: ";
+            getline(cin, P);
+            for (int i = 0; i < n1; i++)
+            {
+                f = 0;
+                substringSearch(human[i].NAME, P, f);
+                if (f==1)
+                {
+                    cout << "Номер искомой строки: " << human[i].n << endl;
+                }
+            }
+        }
+        if (str=="стоп")
+        {
+            cout << "Программа остановлена!" << endl << endl;
         }
     }
     return 0;
