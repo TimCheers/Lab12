@@ -176,7 +176,7 @@ void GetFromF(vector<STR> &human, int &n1)
                 F1 >> dat02;
                 F1 >> dat03;
                 F1 >> No0;
-                test.NAME = NAME1 + ' ' + NAME0;
+                test.NAME = NAME1 +  NAME0;
                 test.dat1 = dat01;
                 test.dat2 = dat02;
                 test.dat3 = dat03;
@@ -190,38 +190,58 @@ void GetFromF(vector<STR> &human, int &n1)
         }
     }
 }
-void substringSearch(string str, string substr, bool f)
+void substringSearch(string str, string substr, bool& f)
 {
     int strl, substrl, res = -1;
     strl = str.size();
     substrl = substr.size();
     if (substrl != 0 && strl != 0)
     {
-        for (int i = 0; i < strl - substrl + 1; i++)
+        int strl, substrl, res = 0;
+        strl = str.size();
+        substrl = substr.size();
+        if (substrl != 0 && strl != 0)
         {
-            for (int j = 0; j < substrl; j++)
+            for (int i = 0; i < strl; i++)
             {
-                if (substr[j] != str[i + 1])
+                if (str[i] == substr[0])
                 {
-                    break;
-                }
-                else if (j == substrl - 1)
-                {
-                    res = i;
-                    break;
+                    for (int j = 0; j < substrl; j++)
+                    {
+                        if (str[i + j] == substr[j])
+                        {
+                            res++;
+                        }
+                    }
                 }
             }
+            if (res == substrl)
+            {
+                cout << "Подстрока найдена.";
+                f = 1;
+            }
+            //else
+            //{
+            //    cout << "Подстрока не найдена." << endl;
+            //    f = 0;
+            //}
         }
-        if (res != -1)
+    }
+}
+void LineSearch(vector<STR> human,int n1,int d1, int d2, int d3)
+{
+    bool f = 0;
+    for (int i = 0; i < n1; i++)
+    {
+        if (human[i].dat1 == d1 && human[i].dat2 == d2 && human[i].dat3 == d3)
         {
-            cout << "Подстрока найдена.";
+            cout << "Номер искомого объекта: " << human[i].n << endl;
             f = 1;
         }
-        else
-        {
-            cout << "Подстрока найдена." << endl;
-            f = 0;
-        }
+    }
+    if (f == 0)
+    {
+        cout << "Объект не найден" << endl;
     }
 }
 void DelByNumb(vector<STR>& human, int k)
@@ -236,7 +256,7 @@ int main()
 	srand(time(NULL));
     vector<STR> human;
     int n1=0;
-    cout << "Введите команду" << endl << "Список доступных команд: стоп, заполнить случайно, вывести, загрузить из файла, сохранить в файле, найти ФИО." << endl;
+    cout << "ВВЕДИТЕ КОМАНДУ" << endl << "Список доступных команд:\n\nстоп\t\t\tзаполнить случайно\nвывести\t\t\tзагрузить из файла\nсохранить в файле\tнайти строку\nлинейный поиск\t\tкоманды\n" << endl;//добавить, удалить по номеру, удалить по ключу, интерполяционный поиск(день/месяц/год)
     string str = "слово";
     while (str!="стоп")
     {
@@ -281,11 +301,11 @@ int main()
                 SaveInF(human, n1);
             }
         }
-        if (str == "найти ФИО")
+        if (str == "найти строку")
         {
             string P;
             bool f = 0;
-            cout << "Введите параметр поиска: ";
+            cout << "Введите параметр поиска: "<<endl;
             getline(cin, P);
             for (int i = 0; i < n1; i++)
             {
@@ -293,9 +313,30 @@ int main()
                 substringSearch(human[i].NAME, P, f);
                 if (f==1)
                 {
-                    cout << "Номер искомой строки: " << human[i].n << endl;
+                    cout << " Номер искомой строки: " << human[i].n << endl;
                 }
             }
+        }
+        if (str == "линейный поиск")
+        {
+            string P;
+            int  dat01 = -1, dat02 = -1, dat03 = -1;
+            cout << "Введите параметр поиска: ";
+            while ((dat01 <= 0 || dat01 >= 30) || (dat02 <= 0 || dat02 >= 12) || (dat03 >= 2003 || dat03 < 1950))
+            {
+                cout << "День:\t"; cin >> dat01;
+                cout << "Номер месяца:\t"; cin >> dat02;
+                cout << "Год:\t"; cin >> dat03;
+                if ((dat01 <= 0 || dat01 >= 30) || (dat02 <= 0 || dat02 >= 12) || (dat03 >= 2003 || dat03 < 1940))
+                {
+                    cout << "Введены некоректные данные! Введите дату рождения заново!" << endl;
+                }
+                LineSearch(human, n1, dat01, dat02, dat03);
+            }
+        }
+        if (str=="команды")
+        {
+            cout << "Список доступных команд : \n\nстоп\t\t\tзаполнить случайно\nвывести\t\t\tзагрузить из файла\nсохранить в файле\tнайти строку\nлинейный поиск\t\tкоманды\n" << endl;
         }
         if (str=="стоп")
         {
