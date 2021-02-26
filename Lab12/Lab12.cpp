@@ -244,6 +244,37 @@ void LineSearch(vector<STR> human,int n1,int d1, int d2, int d3)
         cout << "Объект не найден" << endl;
     }
 }
+int InterpolSearch(vector<STR>& A, int N, int key)
+{
+    int mid, left = 0, right = N - 1;
+    while (A[left].n <= key && A[right].n >= key)
+    {
+        mid = left + ((key - A[left].n) * (right - left)) / (A[right].n - A[left].n);
+        if (A[mid].n < key)
+        {
+            left = mid + 1;
+        }
+        else
+        {
+            if (A[mid].n > key)
+            {
+                right = mid - 1;
+            }
+            else
+            {
+                return mid;
+            }
+        }
+    }
+    if (A[left].n == key)
+    {
+        return left;
+    }
+    else
+    {
+        return -1;
+    }
+}
 void DelByNumb(vector<STR>& human, int k)
 {
     auto iter = human.cbegin();
@@ -256,7 +287,7 @@ int main()
 	srand(time(NULL));
     vector<STR> human;
     int n1=0;
-    cout << "ВВЕДИТЕ КОМАНДУ" << endl << "Список доступных команд:\n\nстоп\t\t\tзаполнить случайно\nвывести\t\t\tзагрузить из файла\nсохранить в файле\tнайти строку\nлинейный поиск\t\tкоманды\n" << endl;//добавить, удалить по номеру, удалить по ключу, интерполяционный поиск(день/месяц/год)
+    cout << "ВВЕДИТЕ КОМАНДУ" << endl << "Список доступных команд:\n\nстоп\t\t\tзаполнить случайно\nвывести\t\t\tзагрузить из файла\nсохранить в файле\tнайти строку\nлинейный поиск\t\tкоманды\nинтерполяционный поиск\t" << endl;//добавить, удалить по номеру, удалить по ключу
     string str = "слово";
     while (str!="стоп")
     {
@@ -337,6 +368,10 @@ int main()
         if (str=="команды")
         {
             cout << "Список доступных команд : \n\nстоп\t\t\tзаполнить случайно\nвывести\t\t\tзагрузить из файла\nсохранить в файле\tнайти строку\nлинейный поиск\t\tкоманды\n" << endl;
+        }
+        if (str == "интерполяционный поиск")
+        {
+           
         }
         if (str=="стоп")
         {
