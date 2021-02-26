@@ -1,6 +1,6 @@
 ﻿#include <iostream>
 #include <string>
-#include <fstream>
+//#include <fstream>
 #include <time.h>
 #include <vector> 
 using namespace std;
@@ -190,38 +190,36 @@ void GetFromF(vector<STR> &human, int &n1)
         }
     }
 }
-void substringSearch(string str, string substr, bool f)
+void substringSearch(string str, string substr, bool& f)
 {
-    int strl, substrl, res = -1;
+    int strl, substrl, res = 0;
     strl = str.size();
     substrl = substr.size();
     if (substrl != 0 && strl != 0)
     {
-        for (int i = 0; i < strl - substrl + 1; i++)
+        for (int i = 0; i < strl; i++)
         {
-            for (int j = 0; j < substrl; j++)
+            if (str[i] == substr[0])
             {
-                if (substr[j] != str[i + 1])
+                for (int j = 0; j < substrl; j++)
                 {
-                    break;
-                }
-                else if (j == substrl - 1)
-                {
-                    res = i;
-                    break;
+                    if (str[i + j] == substr[j])
+                    {
+                        res++;
+                    }
                 }
             }
         }
-        if (res != -1)
+        if (res == substrl)
         {
             cout << "Подстрока найдена.";
             f = 1;
         }
-        else
-        {
-            cout << "Подстрока найдена." << endl;
-            f = 0;
-        }
+        //else
+        //{
+        //    cout << "Подстрока не найдена." << endl;
+        //    f = 0;
+        //}
     }
 }
 void DelByNumb(vector<STR>& human, int k)
@@ -304,5 +302,3 @@ int main()
     }
     return 0;
 }
-
-
