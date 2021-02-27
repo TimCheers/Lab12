@@ -220,11 +220,6 @@ void substringSearch(string str, string substr, bool& f)
                 cout << "Подстрока найдена.";
                 f = 1;
             }
-            //else
-            //{
-            //    cout << "Подстрока не найдена." << endl;
-            //    f = 0;
-            //}
         }
     }
 }
@@ -247,16 +242,16 @@ void LineSearch(vector<STR> human,int n1,int d1, int d2, int d3)
 int InterpolSearch(vector<STR>& A, int N, int key)
 {
     int mid, left = 0, right = N - 1;
-    while (A[left].n <= key && A[right].n >= key)
+    while (A[left].dat1 <= key && A[right].dat1 >= key)
     {
-        mid = left + ((key - A[left].n) * (right - left)) / (A[right].n - A[left].n);
-        if (A[mid].n < key)
+        mid = left + ((key - A[left].dat1) * (right - left)) / (A[right].dat1 - A[left].dat1);
+        if (A[mid].dat1 < key)
         {
             left = mid + 1;
         }
         else
         {
-            if (A[mid].n > key)
+            if (A[mid].dat1 > key)
             {
                 right = mid - 1;
             }
@@ -266,7 +261,7 @@ int InterpolSearch(vector<STR>& A, int N, int key)
             }
         }
     }
-    if (A[left].n == key)
+    if (A[left].dat1 == key)
     {
         return left;
     }
@@ -275,10 +270,85 @@ int InterpolSearch(vector<STR>& A, int N, int key)
         return -1;
     }
 }
-void DelByNumb(vector<STR>& human, int k)
+void Met3(int size, vector<STR>& A)
+{
+    cout << "\nДля интерполяционного поиска данные отсортированны по дню рождения в порядке возрастания\n\n";
+    STR tmp;
+    for (int i = 0; i < size - 1; i++)
+    {
+        for (int j = 0; j < size - 1; j++)
+        {
+
+            if (A[j].dat1 > A[j + 1].dat1)
+            {
+                tmp.dat1 = A[j + 1].dat1;
+                tmp.dat2 = A[j + 1].dat2;
+                tmp.dat3 = A[j + 1].dat3;
+                tmp.NAME = A[j + 1].NAME;
+                tmp.No = A[j + 1].No;
+                A[j + 1].dat1 = A[j].dat1;
+                A[j + 1].dat2 = A[j].dat2;
+                A[j + 1].dat3 = A[j].dat3;
+                A[j + 1].NAME = A[j].NAME;
+                A[j + 1].No = A[j].No;
+                A[j].dat1 = tmp.dat1;
+                A[j].dat2 = tmp.dat2;
+                A[j].dat3 = tmp.dat3;
+                A[j].NAME = tmp.NAME;
+                A[j].No = tmp.No;
+            }
+        }
+    }
+    cout << "\t\t\tОТСОРТИРОВАННЫЙ МАССИВ:\n-------------------------------------------------------------\n";
+    Print(A, size);
+    cout << "\n-------------------------------------------------------------\n";
+}
+void DelByNumb(vector<STR>& human, int k, int& n)
 {
     auto iter = human.cbegin();
     human.erase(iter + k-1);
+    n--;
+    for (int i = k-1; i < n; i++)
+    {
+        human[i].n--;
+    }
+    cout << "Элемент с номером " << k << " успешно удалён\n\n";
+}
+void AddByNumb(vector<STR>& human, int k, int& n)
+{
+    cin.ignore();
+    STR tmp;
+    tmp.n = k;
+    cout << "Введите параметры\n";
+    cout << "ФИО: ";
+    getline(cin, tmp.NAME);
+    cout << "Телефонный номер: ";
+    cin >> tmp.No;
+    cout << "Дата рождения:\nДень: ";
+    cin >> tmp.dat1;
+    cout << "Номер месяца: ";
+    cin >> tmp.dat2;
+    cout << "Год: ";
+    cin >> tmp.dat3;
+    cout << endl;
+    auto iter = human.cbegin();
+    human.emplace(iter + k - 1, tmp);
+    n++;
+    for (int i = k ; i < n; i++)
+    {
+        human[i].n++;
+    }
+    cout << "Элемент с номером " << k << " успешно добавен\n\n";
+}
+void DelByKey(vector<STR>& human, int& n, int k)
+{
+    auto iter = human.cbegin();
+    human.erase(iter + k - 1);
+    n--;
+    for (int i = k - 1; i < n; i++)
+    {
+        human[i].n--;
+    }
 }
 int main()
 {
@@ -287,7 +357,7 @@ int main()
 	srand(time(NULL));
     vector<STR> human;
     int n1=0;
-    cout << "ВВЕДИТЕ КОМАНДУ" << endl << "Список доступных команд:\n\nстоп\t\t\tзаполнить случайно\nвывести\t\t\tзагрузить из файла\nсохранить в файле\tнайти строку\nлинейный поиск\t\tкоманды\nинтерполяционный поиск\t" << endl;//добавить, удалить по номеру, удалить по ключу
+    cout << "ВВЕДИТЕ КОМАНДУ" << endl << "Список доступных команд:\n\n1.стоп\t\t\t\t2.заполнить случайно\n3.вывести\t\t\t4.загрузить из файла\n5.сохранить в файле\t\t6.найти строку\n7.линейный поиск\t\t8.команды\n9.интерполяционный поиск\t10.удалить по номеру\n11.добавить\t\t\t12.удалить по ключу" << endl << endl;
     string str = "слово";
     while (str!="стоп")
     {
@@ -335,7 +405,7 @@ int main()
         if (str == "найти строку")
         {
             string P;
-            bool f = 0;
+            bool f = 0,b=0;
             cout << "Введите параметр поиска: "<<endl;
             getline(cin, P);
             for (int i = 0; i < n1; i++)
@@ -344,8 +414,13 @@ int main()
                 substringSearch(human[i].NAME, P, f);
                 if (f==1)
                 {
+                    b == 1;
                     cout << " Номер искомой строки: " << human[i].n << endl;
                 }
+            }
+            if (b == 0)
+            {
+                cout << "\nСтрока не найдена\n";
             }
         }
         if (str == "линейный поиск")
@@ -371,7 +446,74 @@ int main()
         }
         if (str == "интерполяционный поиск")
         {
-           
+            Met3(n1, human);
+            int key, ans;
+            cout << "Введите параметр поиска(день рождения): " << endl;
+            cin >> key;
+            ans = InterpolSearch(human, n1, key);
+            if (ans==-1)
+            {
+                cout << "Элемента нет" << endl;
+            }
+            else
+            {
+                cout << "Искомые элементы начинаются с " << ans-1 << " индекса" << endl;
+            }
+        }
+        if (str == "удалить по номеру")
+        {
+            int No=-1;
+            cout << "Введите номер удаляемого элемента: ";
+            while (No <= 0 || No >= n1 + 1)
+            {
+                cin >> No;
+                if (No <= 0 || No >= n1 + 1)
+                {
+                    cout << "Введено некоректное значение" << endl;
+                }
+            }
+            DelByNumb(human, No, n1);
+        }
+        if (str == "добавить")
+        {
+            int No = -1;
+            cout << "Введите номер добавляемого элемента: ";
+            while (No <= 0 || No >= n1 + 2)
+            {
+                cin >> No;
+                if (No <= 0 || No >= n1 + 2)
+                {
+                    cout << "Введено некоректное значение" << endl;
+                }
+            }
+            AddByNumb(human, No, n1);
+        }
+        if (str == "удалить по ключу")
+        {
+            string P;
+            bool f = 0, b = 0;
+            cout << "Введите параметр удаления(ФИО): " << endl;
+            getline(cin, P);
+            for (int i = 0; i < n1; i++)
+            {
+                f = 0;
+                substringSearch(human[i].NAME, P, f);
+                if (f == 1)
+                {
+                    int k = human[i].n;
+                    DelByKey(human, n1, k);
+                    b = 1;
+                    cout << " И удалена!\n";
+                }
+            }
+            if (b==1)
+            {
+                cout << "\nЭлементы удалены\n\n";
+            }
+            else
+            {
+                cout << "Элементы не найдены\n";
+            }
         }
         if (str=="стоп")
         {
