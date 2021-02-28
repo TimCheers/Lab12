@@ -202,7 +202,7 @@ void substringSearch(string str, string substr, bool& f)
         substrl = substr.size();
         if (substrl != 0 && strl != 0)
         {
-            for (int i = 0; i < strl; i++)
+            for (int i = 0; i < strl - substrl + 1; i++)
             {
                 if (str[i] == substr[0])
                 {
@@ -213,12 +213,17 @@ void substringSearch(string str, string substr, bool& f)
                             res++;
                         }
                     }
+                    if (res != substrl)
+                    {
+                        res = 0;
+                    }
+                    else
+                    {
+                        i = strl;
+                        cout << "Подстрока найдена, ";
+                        f = 1;
+                    }
                 }
-            }
-            if (res == substrl)
-            {
-                cout << "Подстрока найдена.";
-                f = 1;
             }
         }
     }
@@ -350,6 +355,55 @@ void DelByKey(vector<STR>& human, int& n, int k)
         human[i].n--;
     }
 }
+///////////////////////////////////////////////////////////МЕТОД БМ////////////////////////////////////////////////////////////////////////////////
+void BMsearch(string str, string substr, bool& f)
+{
+    int stl, subctl;
+    stl = str.size();
+    subctl = substr.size();
+    if (stl != 0 && subctl != 0 && stl >= subctl)
+    {
+        int i, p;
+        int b[256];
+        for (i = 0; i < 256; i++)
+        {
+            b[i] = subctl;
+        }
+        for (i = subctl - 2; i >= 0; i--)
+        {
+            if (b[int(unsigned char(substr[i]))] == subctl)
+            {
+                b[int(unsigned char(substr[i]))] = subctl - i - 1;
+            }
+        }
+        p = subctl - 1;
+        while (p < stl)
+        {
+            if (substr[subctl - 1] != str[p])
+            {
+                p += b[int((unsigned char)str[p])];
+            }
+            else
+            {
+                for (i = subctl - 1; i >= 0; i--)
+                {
+                    if (substr[i] != str[p - subctl + i + 1])
+                    {
+                        p += b[int((unsigned char)str[p])];
+                        i = -1;
+                    }
+                    else if (i == 0)
+                    {
+                        cout << "Подстрока найдена, ";
+                        f = 1;
+                        p = stl;
+                    }
+                }
+            }
+        }
+    }
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 int main()
 {
     system("chcp 1251>nul");
@@ -358,9 +412,12 @@ int main()
     vector<STR> human;
     int n1=0;
     cout << "ВВЕДИТЕ КОМАНДУ" << endl << "Список доступных команд:\n\n1.стоп\t\t\t\t2.заполнить случайно\n3.вывести\t\t\t4.загрузить из файла\n5.сохранить в файле\t\t6.найти строку\n7.линейный поиск\t\t8.команды\n9.интерполяционный поиск\t10.удалить по номеру\n11.добавить\t\t\t12.удалить по ключу" << endl << endl;
+    cout << "------------------------------------------------------------------------------------------" << endl << endl;
+    cout << "13.метод БМ\t\t\t14.метод КМП" << endl << endl;
     string str = "слово";
     while (str!="стоп")
     {
+        cout << "------------------------------------------------------------------------------------------" << endl<<endl;
         getline(cin, str);
         cout << endl;
         if (str=="заполнить случайно")
@@ -404,8 +461,9 @@ int main()
         }
         if (str == "найти строку")
         {
+            int b = 0;
             string P;
-            bool f = 0,b=0;
+            bool f = 0;
             cout << "Введите параметр поиска: "<<endl;
             getline(cin, P);
             for (int i = 0; i < n1; i++)
@@ -414,7 +472,7 @@ int main()
                 substringSearch(human[i].NAME, P, f);
                 if (f==1)
                 {
-                    b == 1;
+                    b++;
                     cout << " Номер искомой строки: " << human[i].n << endl;
                 }
             }
@@ -442,7 +500,9 @@ int main()
         }
         if (str=="команды")
         {
-            cout << "Список доступных команд : \n\nстоп\t\t\tзаполнить случайно\nвывести\t\t\tзагрузить из файла\nсохранить в файле\tнайти строку\nлинейный поиск\t\tкоманды\n" << endl;
+            cout << "Список доступных команд:\n\n1.стоп\t\t\t\t2.заполнить случайно\n3.вывести\t\t\t4.загрузить из файла\n5.сохранить в файле\t\t6.найти строку\n7.линейный поиск\t\t8.команды\n9.интерполяционный поиск\t10.удалить по номеру\n11.добавить\t\t\t12.удалить по ключу" << endl;
+            cout << "------------------------------------------------------------------------------------------" << endl << endl;
+            cout << "13.метод БМ\t\t\t14.метод КМП" << endl << endl;
         }
         if (str == "интерполяционный поиск")
         {
@@ -513,6 +573,28 @@ int main()
             else
             {
                 cout << "Элементы не найдены\n";
+            }
+        }
+        if (str == "метод БМ")
+        {
+            int b = 0;
+            string P;
+            bool f = 0;
+            cout << "Введите параметр поиска: " << endl;
+            getline(cin, P);
+            for (int i = 0; i < n1; i++)
+            {
+                f = 0;
+                BMsearch(human[i].NAME, P, f);
+                if (f == 1)
+                {
+                    b++;
+                    cout << " Номер искомой строки: " << human[i].n << endl;
+                }
+            }
+            if (b == 0)
+            {
+                cout << "\nСтрока не найдена\n";
             }
         }
         if (str=="стоп")
