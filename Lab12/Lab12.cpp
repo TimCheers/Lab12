@@ -404,45 +404,45 @@ void BMsearch(string str, string substr, bool& f)
     }
 }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-int KMPSearch(string strin, string substring) { //в качестве параметров в функцию передается строка и субстрока
+int KMPSearch(string strin, string substring) { 
     int  sl, ssl;
     int res = -1;
-    sl = strin.length();                                            //присваивается длина строки
-    ssl = substring.length();                                      //присваивается длина субстроки
-    if (sl == 0)                                                    //проверка строки
+    sl = strin.length();                                            
+    ssl = substring.length();                                      
+    if (sl == 0)                                                   
         cout << "Неверно задана строка\n";
-    else if (ssl == 0)                                            //проверка субстроки
+    else if (ssl == 0)                                           
         cout << "Неверно задана подстрока\n";
     else
-    {                                                            //Если все нормально - поехали
+    {                                                           
         int  i, j = 0, k = -1;
         int* d;
-        d = new int[1000];                                         //создали динамический одномерный массив
-        d[0] = -1;                                                    //первый элемент делаем равным -1
-        while (j < ssl - 1) {                                      //пока  j < кол-ва эл-тов строки
-            while (k >= 0 && substring[j] != substring[k]) /*пока k больше или равно 0 и j-тый элемент субстроки не равен
-                                                                           k-тому присваиваем k k-тый элемент динамического массива*/
+        d = new int[1000];                                        
+        d[0] = -1;                                                   
+        while (j < ssl - 1) {                                     
+            while (k >= 0 && substring[j] != substring[k]) 
+                                                                          
                 k = d[k];
-            j++;                                                         //увеличиваем j
+            j++;                                                        
             k++;
-            if (substring[j] == substring[k])                   //если j-ый элемент субстроки равен k-тому
-                d[j] = d[k];                                             //присваиваем j-тому элементу динамического массива k-тый
-            else                                                         //иначе
-                d[j] = k;                                                 //присваиваем k
+            if (substring[j] == substring[k])                  
+                d[j] = d[k];                                             
+            else                                                        
+                d[j] = k;                                                
         }
         i = 0;
-        j = 0;                                                         //обнулили i, j
+        j = 0;                                                        
         while (j < ssl && i < sl)
-        {                               //пока j < длины субстроки и i < длины строки
-            while (j >= 0 && strin[i] != substring[j])       // пока j >= 0 и i-ый элемент субстроки не равен j-ому
-                j = d[j];                                                  //j присваивается j-ый элемент динамического массива
+        {                              
+            while (j >= 0 && strin[i] != substring[j])      
+                j = d[j];                                                 
             i++;
-            j++;                                                         //увеличиваем i и j
+            j++;                                                       
         }
 
 
-        delete[] d;                                                 //удаляем динам. массив                                                
-        res = j == ssl ? i - ssl : -1;                           // результатом будет i-ssl если j = ssl и -1 в противном случае
+        delete[] d;                                                                                               
+        res = j == ssl ? i - ssl : -1;                         
     }
     return res;
 }
