@@ -337,7 +337,14 @@ void AddByNumb(vector<STR>& human, int k, int& n)
     cin >> tmp.dat3;
     cout << endl;
     auto iter = human.cbegin();
-    human.emplace(iter + k - 1, tmp);
+    if (k>n)
+    {
+        human.push_back(tmp);
+    }
+    else
+    {
+        human.emplace(iter + k - 1, tmp);
+    }
     n++;
     for (int i = k ; i < n; i++)
     {
